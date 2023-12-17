@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { PaginatedResult } from 'interfaces/paginated-result.interface';
 import Logging from 'library/Logging';
 import { Repository } from 'typeorm';
 
@@ -16,7 +17,7 @@ export abstract class AbstractService {
         }
     }
 
-    async findBy(condition, relations: []): Promise<any[]> {
+    async findBy(condition, relations = []): Promise<any> {
         try {
             return this.repository.findOne({
                 where: condition,
@@ -28,9 +29,9 @@ export abstract class AbstractService {
         }
     }
 
-    async findById(id: string, relations: []): Promise<any[]> {
+    async findById(id: string, relations = []): Promise<any> {
         try {
-            const element = this.repository.findOne({
+            const element = await this.repository.findOne({
                 where: { id },
                 relations
             })
@@ -41,6 +42,40 @@ export abstract class AbstractService {
         } catch (err) {
             Logging.error(err)
             throw new InternalServerErrorException(`Something wet wrong while searching for an element with id: ${id}`)
+        }
+    }
+
+    async remove(id: string): Promise<any> {
+        const element = await this.findById(id)
+        try {
+            return this.repository.remove(element)
+        } catch (err) {
+            Logging.error(err)
+            throw new InternalServerErrorException(`Something wet wrong while deleting an element`)
+        }
+    }
+
+    async paginate(page = 1, relations = []): Promise<PaginatedResult> {
+        const take = 10
+
+        try {
+            const [data, total] = await this.repository.findAndCount({
+                take,
+                skip: (page - 1) * take,
+                relations
+            })
+    
+            return {
+                data: data,
+                meta: {
+                    total,
+                    page,
+                    last_page: Math.ceil(total / take),
+                }
+            }
+        } catch (err) {
+            Logging.error(err)
+            throw new InternalServerErrorException(`Something wet wrong while searching for a paginated element`)
         }
     }
 }
