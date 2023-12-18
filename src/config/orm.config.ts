@@ -12,7 +12,7 @@ export const ORMConfig = async (configService: ConfigService): Promise<Connectio
     username: configService.get('DATABASE_USERNAME'),
     password: configService.get('DATABASE_PWD'),
     database: configService.get('DATABASE_NAME'),
-    entities: ['dist/**/*.entity.ts'],
+    entities: ['dist/**/*.entity.js'], // change to .ts
     synchronize: true, // only in development! false for production, otherwise it will overwrite data each time
     ssl: false,
     // extra: {
