@@ -7,6 +7,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { isFileExtensionSafe, removeFile, saveImageToStorage } from 'helpers/imageStorage';
 import { join } from 'path';
+import { HasPermission } from 'decorators/has-permission.decorator';
 
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -14,9 +15,10 @@ export class UsersController {
     constructor(private readonly usersService: UsersService) {}
 
     @Get()
+    // @HasPermission('users')
     @HttpCode(HttpStatus.OK)
     async findAll(@Query('page') page: number): Promise<PaginatedResult> {
-        return this.usersService.paginate(page)
+        return this.usersService.paginate(page, ['role'])
     }
 
     @Get(':id')
