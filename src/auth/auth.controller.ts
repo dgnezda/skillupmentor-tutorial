@@ -19,12 +19,16 @@ import { RequestWithUser } from 'interfaces/auth.interface'
 import { AuthService } from './auth.service'
 import { RegisterUserDto } from './dto/register-user.dto'
 import { LocalAuthGuard } from './guards/local-auth.guard'
+import { ApiBadRequestResponse, ApiCreatedResponse, ApiTags } from '@nestjs/swagger'
 
+@ApiTags('auth')
 @Controller('auth')
 @UseInterceptors(ClassSerializerInterceptor)
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  @ApiCreatedResponse({ description: 'Registers new user.' })
+  @ApiBadRequestResponse({ description: 'Error for registering new user.' })
   @Public()
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
@@ -32,6 +36,8 @@ export class AuthController {
     return this.authService.register(body)
   }
 
+  @ApiCreatedResponse({ description: 'Logs in user.' })
+  @ApiBadRequestResponse({ description: 'Error for logging in a user.' })
   @Public()
   @UseGuards(LocalAuthGuard)
   @Post('login')
@@ -42,6 +48,8 @@ export class AuthController {
     return req.user
   }
 
+  @ApiCreatedResponse({ description: 'Returns authenticated/logged in user.' })
+  @ApiBadRequestResponse({ description: 'Error for returning authenticated/logged in user.' })
   @Get()
   @HttpCode(HttpStatus.OK)
   async user(@Req() req: Request): Promise<User> {
@@ -49,6 +57,8 @@ export class AuthController {
     return this.authService.user(cookie)
   }
 
+  @ApiCreatedResponse({ description: 'Signs out user.' })
+  @ApiBadRequestResponse({ description: 'Error for signing out user.' })
   @Post('signout')
   @HttpCode(HttpStatus.OK)
   async signout(@Res({ passthrough: true }) res: Response): Promise<{ msg: string }> {
