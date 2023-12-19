@@ -1,20 +1,31 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, HttpStatus, Query, BadRequestException } from '@nestjs/common';
-import { RolesService } from './roles.service';
-import { CreateUpdateRoleDto } from './dto/create-update-role.dto';
-import { PaginatedResult } from 'interfaces/paginated-result.interface';
-import { User } from 'entities/user.entity';
-import { Role } from 'entities/role.entity';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common'
+import { Role } from 'entities/role.entity'
+import { PaginatedResult } from 'interfaces/paginated-result.interface'
+
+import { CreateUpdateRoleDto } from './dto/create-update-role.dto'
+import { RolesService } from './roles.service'
 
 @Controller('roles')
 export class RolesController {
   constructor(private rolesService: RolesService) {}
-  
+
   @Get()
   @HttpCode(HttpStatus.OK)
   async findAll(): Promise<Role[]> {
-      return this.rolesService.findAll(['permissions'])
+    return this.rolesService.findAll(['permissions'])
   }
-  
+
   @Get('/paginated')
   @HttpCode(HttpStatus.OK)
   async paginated(@Query('page') page: number): Promise<PaginatedResult> {
@@ -30,25 +41,25 @@ export class RolesController {
   @Post()
   @HttpCode(HttpStatus.OK)
   async create(
-      @Body() createRoleDto: CreateUpdateRoleDto, 
-      @Body('permissions') permissionsIds: string[]
-    ): Promise<Role> {
-      // Format data: [1, 2] ==> [{id: 1}, {id: 2}] --- .map() function!
-      return this.rolesService.create(
-        createRoleDto,
-        permissionsIds.map((id) => ({
-          id,
-        })),
-      )
+    @Body() createRoleDto: CreateUpdateRoleDto,
+    @Body('permissions') permissionsIds: string[],
+  ): Promise<Role> {
+    // Format data: [1, 2] ==> [{id: 1}, {id: 2}] --- .map() function!
+    return this.rolesService.create(
+      createRoleDto,
+      permissionsIds.map((id) => ({
+        id,
+      })),
+    )
   }
 
   @Patch(':id')
   @HttpCode(HttpStatus.OK)
   async update(
-      @Param('id') id: string,
-      @Body() updateRoleDto: CreateUpdateRoleDto, 
-      @Body('permissions') permissionsIds: string[]
-    ): Promise<Role> {
+    @Param('id') id: string,
+    @Body() updateRoleDto: CreateUpdateRoleDto,
+    @Body('permissions') permissionsIds: string[],
+  ): Promise<Role> {
     // Format data: [1, 2] ==> [{id: 1}, {id: 2}] --- .map() function!
     return this.rolesService.update(
       id,
@@ -56,7 +67,7 @@ export class RolesController {
       permissionsIds.map((id) => ({
         id,
       })),
-      )
+    )
   }
 
   @Delete(':id')

@@ -21,6 +21,12 @@ Content-Type: application/json
   	"password": "John123!"
 }
 
+### GET /orders
+http://localhost:8080/orders HTTP/1.1
+
+### GET /orders/chart
+http://localhost:8080/orders/chart HTTP/1.1
+
 ### GET /users
 http://localhost:8080/users HTTP/1.1
 

@@ -1,12 +1,12 @@
-import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Role } from 'entities/role.entity';
-import Logging from 'library/Logging';
-import { AbstractService } from 'modules/common/abstract.service';
-import { Repository } from 'typeorm';
-import { CreateUpdateRoleDto } from './dto/create-update-role.dto';
-import { Permission } from 'entities/permission.entity';
+import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
+import { Permission } from 'entities/permission.entity'
+import { Role } from 'entities/role.entity'
+import Logging from 'library/Logging'
+import { AbstractService } from 'modules/common/abstract.service'
+import { Repository } from 'typeorm'
 
+import { CreateUpdateRoleDto } from './dto/create-update-role.dto'
 
 @Injectable()
 export class RolesService extends AbstractService {
@@ -16,11 +16,11 @@ export class RolesService extends AbstractService {
 
   async create(createRoleDto: CreateUpdateRoleDto, permissionsIds: { id: string }[]): Promise<Role> {
     try {
-        const permission = this.rolesRepository.create({ ...createRoleDto, permissions: permissionsIds })
-        return this.rolesRepository.save(permission)
+      const permission = this.rolesRepository.create({ ...createRoleDto, permissions: permissionsIds })
+      return this.rolesRepository.save(permission)
     } catch (err) {
-        Logging.error(err)
-        throw new BadRequestException('Something went wrong while creating a new permission.')
+      Logging.error(err)
+      throw new BadRequestException('Something went wrong while creating a new permission.')
     }
   }
 
