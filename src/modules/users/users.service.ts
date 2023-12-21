@@ -36,9 +36,7 @@ export class UsersService extends AbstractService {
     const { email, password, confirm_password, role_id, ...data } = updateUserDto
     if (user.email !== email && email) {
       user.email = email
-    } else if (email && user.email === email) {
-      throw new BadRequestException('User with that email already exists.') // ?? Better to write "Entered email is the same as exsisting email" or smtng
-    }
+    } 
     if (password && confirm_password) {
       if (password !== confirm_password) {
         throw new BadRequestException('Passwords do not match')

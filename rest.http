@@ -53,7 +53,7 @@ POST http://localhost:8080/permissions HTTP/1.1
 Content-Type: application/json
 
 {
-  	"name": "edit_permissions"
+  	"name": "edit_products"
 }
 
 
@@ -68,8 +68,8 @@ POST http://localhost:8080/roles HTTP/1.1
 Content-Type: application/json
 
 {
-  	"name": "Viewer",
-	"permissions": ["dedc813b-9030-4d94-893c-a9f3a99dee68"]
+  	"name": "Admin",
+	"permissions": ["a4374282-b334-44c0-8fa9-3dfd993245e8"]
 }
 
 ### PATCH /roles/:id
