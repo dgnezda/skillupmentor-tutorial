@@ -7,6 +7,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  Patch,
   Post,
   Query,
   UploadedFile,
@@ -53,7 +54,7 @@ export class ProductsController {
 
   @ApiCreatedResponse({ description: 'Uploads new product image.' })
   @ApiBadRequestResponse({ description: 'Error for uploading new product image.' })
-  @Post()
+  @Post('upload/:id')
   @UseInterceptors(FileInterceptor('image', saveImageToStorage))
   @HttpCode(HttpStatus.CREATED)
   async upload(@UploadedFile() file: Express.Multer.File, @Param('id') productId: string): Promise<Product> {
@@ -71,8 +72,8 @@ export class ProductsController {
   }
 
   @ApiCreatedResponse({ description: 'Updates a product.' })
-  @ApiBadRequestResponse({ description: 'Error for upldating a product.' })
-  @Post(':id')
+  @ApiBadRequestResponse({ description: 'Error for updatng a product.' })
+  @Patch(':id')
   @HttpCode(HttpStatus.OK)
   async update(@Param('id') id: string, @Body() createProductDto: CreateUpdateProductDto): Promise<Product> {
     return this.productsService.update(id, createProductDto)
